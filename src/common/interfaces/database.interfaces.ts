@@ -17,25 +17,46 @@ export interface ProviderProfile {
   business_name: string;
   bio?: string;
   verification_status: 'pending' | 'approved' | 'rejected';
+  is_available: boolean;
   average_rating: number;
   total_reviews: number;
-  trust_score: number;
+  years_experience?: string;
+  service_area?: string;
+  service_areas?: string[];
+  languages?: string[];
+  tags?: string[];
+  avatar_url?: string;
+  facebook_url?: string;
+  instagram_handle?: string;
+  website_url?: string;
   created_at: string;
+  updated_at: string;
 }
 
 export interface ProviderService {
   id: string;
   provider_id: string;
-  title: string;
-  description: string;
   category_id: string;
+  title: string;
+  description?: string;
   price: number;
   supports_hourly: boolean;
   hourly_rate?: number;
   supports_flat: boolean;
   flat_rate?: number;
+  default_pricing_mode?: PricingMode;
   created_at: string;
 }
+
+export type BookingStatus =
+  | 'pending'
+  | 'confirmed'
+  | 'in_progress'
+  | 'completed'
+  | 'cancelled'
+  | 'disputed';
+
+export type PricingMode = 'flat_rate' | 'hourly_rate';
 
 export interface Booking {
   id: string;
@@ -43,34 +64,31 @@ export interface Booking {
   customer_id: string;
   provider_id: string;
   service_id: string;
+  status: BookingStatus;
   service_address: string;
   scheduled_at: string;
-  pricing_mode: 'hourly' | 'flat';
-  hourly_rate?: number;
-  flat_rate?: number;
-  hours_required?: number;
   total_amount: number;
-  status:
-    | 'pending'
-    | 'confirmed'
-    | 'in_progress'
-    | 'completed'
-    | 'cancelled'
-    | 'disputed';
+  customer_notes?: string;
+  pricing_mode: PricingMode;
+  flat_rate?: number;
+  hourly_rate?: number;
+  hours_required?: number;
   cancellation_reason?: string;
   cancellation_explanation?: string;
   cancelled_at?: string;
   cancelled_by?: string;
-  paid_at?: string;
   created_at: string;
+  updated_at: string;
 }
 
 export interface Dispute {
-  id: string;
+  dispute_id: string;
   booking_id: string;
   raised_by: string;
   reason: string;
-  status: 'open' | 'resolved' | 'closed';
+  status: 'pending' | 'investigating' | 'resolved' | 'rejected';
+  admin_notes?: string;
+  resolved_at?: string;
   created_at: string;
 }
 
@@ -82,6 +100,22 @@ export interface ProviderReview {
   rating: number;
   review_text?: string;
   created_at: string;
+}
+
+export interface EnrichedBooking extends Booking {
+  provider?: {
+    full_name: string;
+    contact_number: string;
+    avatar_url?: string;
+  };
+  service?: {
+    title: string;
+    price: number;
+  };
+  provider_name?: string;
+  provider_rating?: number;
+  provider_avatar?: string;
+  service_name?: string;
 }
 
 export interface Payment {
@@ -102,7 +136,10 @@ export interface ServiceCategory {
   slug: string;
   is_active: boolean;
   parent_id?: string;
-  category_level: number;
+  icon_name?: string;
+  display_order: number;
+  category_level: string;
+  created_at: string;
 }
 
 export interface BookingRescheduleRequest {
@@ -133,10 +170,33 @@ export interface AdditionalCharge {
 }
 
 export interface ProviderDocument {
+  document_id: string;
   provider_id: string;
-  document_type: string;
+  document_type: 'business_permit' | 'government_id' | 'certification';
   document_file_path: string;
   status: 'pending' | 'approved' | 'rejected';
-  reject_reason?: string;
   uploaded_at: string;
+}
+
+export interface SupportTicket {
+  ticket_id: string;
+  user_id: string;
+  subject: string;
+  message: string;
+  status: 'open' | 'in_progress' | 'resolved' | 'closed';
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Notification {
+  id: string;
+  user_id: string;
+  actor_id: string;
+  booking_id?: string;
+  type: string;
+  title: string;
+  body: string;
+  is_read: boolean;
+  data?: any;
+  created_at: string;
 }
