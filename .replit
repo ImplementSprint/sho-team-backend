@@ -1,0 +1,9 @@
+run = "node dist/main"
+
+[deployment]
+deploymentTarget = "cloudrun"
+ignorePorts = false
+
+[[ports]]
+localPort = 3001
+externalPort = 80
