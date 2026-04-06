@@ -19,11 +19,13 @@ WORKDIR /app
 
 COPY package*.json ./
 # Pull patched alpine package for CVE-2026-22184 before app install.
-# CVE-2026-33671 (picomatch in npm's own node_modules) is suppressed via .trivyignore —
-# npm is never invoked at runtime so the ReDoS vector is not reachable in production.
+# Remove npm from the runtime image after installing production deps so
+# bundled npm dependencies like picomatch are not shipped to production.
 RUN apk upgrade --no-cache zlib \
   && npm ci --omit=dev \
   && rm package-lock.json \
+  && rm -rf /usr/local/lib/node_modules/npm \
+  && rm -f /usr/local/bin/npm /usr/local/bin/npx \
   && addgroup --system --gid 1001 nodejs \
   && adduser --system --uid 1001 nestjs
 
