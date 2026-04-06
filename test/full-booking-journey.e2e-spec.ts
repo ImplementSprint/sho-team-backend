@@ -49,8 +49,14 @@ describe('Full Booking Journey (e2e)', () => {
       order: jest.fn().mockReturnThis(),
       limit: jest.fn().mockReturnThis(),
       range: jest.fn().mockReturnThis(),
-      maybeSingle: jest.fn().mockImplementation(() => { singleMode = true; return builder; }),
-      single: jest.fn().mockImplementation(() => { singleMode = true; return builder; }),
+      maybeSingle: jest.fn().mockImplementation(() => {
+        singleMode = true;
+        return builder;
+      }),
+      single: jest.fn().mockImplementation(() => {
+        singleMode = true;
+        return builder;
+      }),
       // Thenable: allows `await builder` to resolve with { data, error }
       // Single-mode returns the scalar data; list-mode returns [] so conflict checks find no conflicts.
       then: jest.fn().mockImplementation(function (onfulfilled: any) {

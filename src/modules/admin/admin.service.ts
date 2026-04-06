@@ -53,7 +53,8 @@ export class AdminService {
       reviewed_by?: string;
     } = {
       status: dto.status,
-      reject_reason: dto.status === 'rejected' ? (dto.reject_reason ?? null) : null,
+      reject_reason:
+        dto.status === 'rejected' ? (dto.reject_reason ?? null) : null,
       reviewed_at: new Date().toISOString(),
     };
 
