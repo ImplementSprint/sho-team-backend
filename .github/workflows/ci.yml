@@ -2,7 +2,7 @@ name: "BE Pipeline Caller"
 
 on:
   push:
-    branches: [test, uat, main]
+    branches: [test, uat, main, test-servease]
   workflow_dispatch:
     inputs:
       pipeline_mode:
@@ -33,7 +33,7 @@ on:
       k6_run_only_on_branch:
         description: "Allowed branches for k6"
         type: string
-        default: "test,main"
+        default: "test,main,test-servease"
       run_deploy:
         description: "Enable deployment"
         type: boolean
@@ -79,7 +79,7 @@ jobs:
       enable_k6: ${{ github.event_name == 'workflow_dispatch' && fromJSON(github.event.inputs.enable_k6 || 'true') || true }}
       k6_script_path: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.k6_script_path || 'tests/performance' }}
       k6_base_url: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.k6_base_url || '' }}
-      k6_run_only_on_branch: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.k6_run_only_on_branch || 'test,main' }}
+      k6_run_only_on_branch: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.k6_run_only_on_branch || 'test,main,test-servease' }}
       run_deploy: ${{ github.event_name == 'workflow_dispatch' && fromJSON(github.event.inputs.run_deploy || 'true') || github.event_name == 'push' }}
       run_promotion: ${{ github.event_name == 'workflow_dispatch' && fromJSON(github.event.inputs.run_promotion || 'true') || github.event_name == 'push' }}
       dry_run: ${{ github.event_name == 'workflow_dispatch' && fromJSON(github.event.inputs.dry_run || 'false') || false }}
